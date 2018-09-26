@@ -1,0 +1,44 @@
+<!-- ./src/app/app.component.html -->
+<mat-card class='card'>
+  <div class="section">
+    <div class="container">
+      <div class="content">
+        <h5 class="title label">BOARD - {{boardId}}</h5>
+        <hr>
+
+        <!-- shows when a player has won the game
+        <section *ngIf="winner" class="notification is-success has-text-centered" style="color:white">
+          <h1>Player {{ winner.player.id }} has won the game!</h1>
+          <h5>Click <a href="{{ gameUrl }}">here</a> to start a new game.</h5>
+                        [style.background-color] = "col.used ? '' : 'transparent'"
+
+        </section> -->
+
+        <!-- loops through the boards array and displays the player and board tiles -->
+        <div class="columns">
+          <div class="column has-text-centered" *ngFor="let board of boards; let i = index">
+            <h6 class='label'>
+              {{ board.player_black_name }} <span class="tag is-info" *ngIf="i == player">You</span>
+              <strong>: {{ board.player_black_wins }}</strong>
+            </h6>
+            <h6 class='label'>
+              {{ board.player_whites_name }} <span class="tag is-info" *ngIf="i == player">You</span>
+              <strong>: {{ board.player_whites_wins }}</strong>
+            </h6>
+            <table class= "board">
+              <tr class= "rowz" *ngFor="let row of board.tiles; let j = index">
+                <td class= "columnz" *ngFor="let col of row; let k = index">
+                  <div [class] = "getClass(j,k)">
+                    <mat-icon class='white_pice' *ngIf="col.value == 'W'">trip_origin</mat-icon>
+                    <mat-icon class='black_pice' *ngIf="col.value == 'B'">trip_origin</mat-icon>
+                    <mat-icon class='king_pice' *ngIf="col.value == 'K'">trip_origin</mat-icon>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-card>

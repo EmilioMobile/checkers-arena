@@ -1,1 +1,64 @@
 /* You can add global styles to this file, and also import other style files */
+@import "styles-variables";
+@import '~bootstrap/scss/bootstrap-reboot';
+@import '~bootstrap/scss/bootstrap-grid';
+//@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+.board-row {
+    margin: 5px;
+}
+
+.container {
+    padding: 10px;
+    //margin: 0;
+}
+
+.content table td, .content table th {
+    border: 1px solid black;
+    padding: 0.5em 0.75em;
+    vertical-align: middle;
+    height: 25px;
+    width: 25px;
+    text-align: center;
+}
+.content table {
+    width: 98%;
+    margin: 0 auto;
+}
+
+.col-xs-5ths,
+.col-sm-5ths,
+.col-md-5ths,
+.col-lg-5ths {
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.col-xs-5ths {
+    width: 20%;
+    float: left;
+}
+
+@media (min-width: 768px) {
+    .col-sm-5ths {
+        width: 20%;
+        float: left;
+    }
+}
+
+@media (min-width: 992px) {
+    .col-md-5ths {
+        width: 20%;
+        float: left;
+    }
+}
+
+@media (min-width: 1200px) {
+    .col-lg-5ths {
+        width: 20%;
+        float: left;
+    }
+}
+

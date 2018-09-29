@@ -1,7 +1,14 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { timer } from 'rxjs';
+import { timer, Observable } from 'rxjs';
 import { Board } from './board'
 import { Player } from './player'
+import * as socketIo from 'socket.io-client';
+
+// Socket.io events
+export enum Event {
+    CONNECT = 'connect',
+    DISCONNECT = 'disconnect'
+}
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +16,9 @@ import { Player } from './player'
 
 export class BoardService {
 
-    movements = [
+    moves = [];
+
+    moves_test = [
         {
         "env_id": 123456789,
         "board_id": "0",
@@ -93,22 +102,44 @@ export class BoardService {
     public drawMovement$: EventEmitter<any>;
     count = 0;
     pices: any[][]
+    ioConnection: any;
 
     constructor() {
+
+        // Initialize the websocket
+        this.initSocket();
+
+        this.ioConnection = this.onMessage().subscribe((message: any) => {
+           // console.log(message)
+            this.moves.push(message);
+        });
+
+        this.onEvent(Event.CONNECT).subscribe(() => {
+            //console.log('connected');
+        });
+
+        this.onEvent(Event.DISCONNECT).subscribe(() => {
+            //console.log('disconnected');
+        });
+
         this.drawMovement$ = new EventEmitter();
         let timer$ = timer(1000,200);
         timer$.subscribe(t => {
             this.render(this.count);
+
+            // for test data only 
             this.count = this.count + 1
             if (this.count == 4) {
                 this.count = 0;
             }
-            console.log('tick ' + t + ' : ' + this.count);
         });
     }
 
     public render(movement): void {
-        this.drawMovement$.emit(this.movements[movement]);
+        if (this.moves.length > 0) {
+            let move = this.moves.pop()
+            this.drawMovement$.emit(move);
+        }
     }
 
     boardRowDistribution(item) {
@@ -240,5 +271,28 @@ export class BoardService {
     // returns all created boards
     getBoards() : Board[] {
         return this.boards;
+    }
+
+    private SERVER_URL = 'http://localhost:5000';
+    private socket;
+
+    public initSocket(): void {
+        this.socket = socketIo(this.SERVER_URL);
+    }
+
+    public send(message: any): void {
+        this.socket.emit('message', message);
+    }
+
+    public onMessage(): Observable<any> {
+        return new Observable<any>(observer => {
+            this.socket.on('message', (data: any) => { observer.next(data) });
+        });
+    }
+
+    public onEvent(event: Event): Observable<any> {
+        return new Observable<Event>(observer => {
+            this.socket.on(event, () => observer.next());
+        });
     }
 }

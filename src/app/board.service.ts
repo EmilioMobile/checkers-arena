@@ -36,6 +36,9 @@ export class BoardService {
                 1, 22, 23, 24, 25, 26, 27, 28, 29, 31, 32
             ],
             "win_num": 8
+        },
+        "kings": {
+            "pices": [ 4, 5, 5]
         }
     },
         {
@@ -55,6 +58,9 @@ export class BoardService {
                     21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32
                 ],
                 "win_num": 8
+            },
+            "kings": {
+                "pices": [ 10, 15, 30]
             }
         },
         {
@@ -74,6 +80,9 @@ export class BoardService {
                     21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32
                 ],
                 "win_num": 7
+            },
+            "kings": {
+                "pices": [ 10, 15, 30]
             }
         },
         {
@@ -93,6 +102,9 @@ export class BoardService {
                     21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32
                 ],
                 "win_num": 20
+            },
+            "kings": {
+                "pices": [ 10, 15, 30]
             }
         }
     ]
@@ -127,7 +139,7 @@ export class BoardService {
         timer$.subscribe(t => {
             this.render(this.count);
 
-            // for test data only 
+            // for test data only
             this.count = this.count + 1
             if (this.count == 4) {
                 this.count = 0;
@@ -136,10 +148,16 @@ export class BoardService {
     }
 
     public render(movement): void {
-        if (this.moves.length > 0) {
-            let move = this.moves.pop()
+        // Test
+        if (this.moves_test.length > 0) {
+            let move = this.moves_test.pop()
             this.drawMovement$.emit(move);
         }
+
+       // if (this.moves.length > 0) {
+       //     let move = this.moves.pop()
+       //     this.drawMovement$.emit(move);
+       // }
     }
 
     boardRowDistribution(item) {
@@ -204,7 +222,7 @@ export class BoardService {
             }
         }
 
-        let turn = { game_num: 0, black: { name: '', pices: [], win_num: 0 }, white: { name: '', pices: [], win_num: 0 }};
+        let turn = { game_num: 0, black: { name: '', pices: [], win_num: 0 }, white: { name: '', pices: [], win_num: 0 }, kings: { pices: [] }};
 
         if (init == false) {
             var nextTurn = movement //; this.movements[movement] // .pop();
@@ -235,6 +253,13 @@ export class BoardService {
                     var row = this.boardRowDistribution(item);
                     var column = this.boardColumDistribution(row, item)
                     this.pices[row][column] = 'W'
+                });
+
+                let kings = turn.kings.pices;
+                kings.forEach((item, index) => {
+                    var row = this.boardRowDistribution(item);
+                    var column = this.boardColumDistribution(row, item)
+                    this.pices[row][column] = 'K'
                 });
 
                 this.lastTurn = turn;
